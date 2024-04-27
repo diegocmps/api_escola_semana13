@@ -1,7 +1,5 @@
 const Curso = require("../models/Curso")
-
 class CursoController {
-
 
     async listar(req, res) {
         try {
@@ -61,13 +59,29 @@ class CursoController {
     async deletar(req, res) {
         const { id } = req.params
 
-    Curso.destroy({
-        where: {
-            id: id
-        }
-    }) // DELETE cursos from cursos where id = 1
+        Curso.destroy({
+            where: {
+                id: id
+            }
+        }) // DELETE cursos from cursos where id = 1
 
-    res.status(204).json({})
+        res.status(204).json({})
+    }
+
+    async atualizar(req, res) {
+        const { id } = req.params
+
+        const curso = await Curso.findByPk(id)
+
+        if (!curso) {
+            return res.status(404).json({ message: 'Curso não encontrado' })
+        }
+
+        curso.update(req.body)
+
+        await curso.save()
+
+        res.json(curso)
     }
 }
 
